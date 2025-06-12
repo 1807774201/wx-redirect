@@ -197,7 +197,7 @@
         
         // 同步目标网址的缓存控制
         const syncCacheHeaders = (frame) => {
-            try {
+            // try {
                 const frameWindow = frame.contentWindow;
                 
                 // 重写fetch方法以确保缓存行为一致
@@ -218,9 +218,9 @@
                     return originalXHROpen.apply(this, arguments);
                 };
                 
-            } catch (e) {
-                console.log('Cannot sync cache headers due to cross-origin restrictions');
-            }
+            // } catch (e) {
+            //     console.log('Cannot sync cache headers due to cross-origin restrictions');
+            // }
         };
         
         // 页面初始化
