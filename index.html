@@ -151,7 +151,7 @@
             frame.setAttribute('allow', 'camera; microphone; geolocation; payment; autoplay; encrypted-media; fullscreen');
             
             // 确保iframe使用与目标网址相同的缓存策略
-            frame.src = httpsUrl + (httpsUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+            frame.src = httpsUrl;
             
             // 处理加载完成
             frame.onload = () => {
@@ -214,7 +214,7 @@
                 const originalXHROpen = frameWindow.XMLHttpRequest.prototype.open;
                 frameWindow.XMLHttpRequest.prototype.open = function(method, url) {
                     // 确保所有XHR请求都包含时间戳参数以避免缓存
-                    url = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+                    // url = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
                     return originalXHROpen.apply(this, arguments);
                 };
                 
