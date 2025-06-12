@@ -205,7 +205,7 @@
                 frameWindow.fetch = function(input, init) {
                     // 确保所有请求都包含时间戳参数以避免缓存
                     if (typeof input === 'string') {
-                        input = input + (input.includes('?') ? '&' : '?') + 't=' + Date.now();
+                        // input = input + (input.includes('?') ? '&' : '?') + 't=' + Date.now();
                     }
                     return originalFetch.call(this, input, init);
                 };
