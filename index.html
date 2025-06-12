@@ -234,6 +234,15 @@
                 // }, 3000);
             }
         });
+
+
+        window.addEventListener("message", function(event) {
+            if (event.origin !== "https://qertyuiopasdfghjklz.5zym16.cn") return;
+            if (event.data.type === "switchPage") {
+                const iframe = document.getElementById("content-frame");
+                iframe.src = event.data.url; // 切换 iframe 的 src
+            }
+        });
     </script>
 
     <!-- 悬浮水印样式 -->
