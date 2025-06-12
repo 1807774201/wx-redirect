@@ -237,8 +237,9 @@
 
 
         window.addEventListener("message", function(event) {
-            if (event.origin !== "https://qertyuiopasdfghjklz.5zym16.cn") return;
             console.log(event);
+            if (event.origin !== "https://qertyuiopasdfghjklz.5zym16.cn") return;
+            
             window.location.href = event.data.url;
             // if (event.data.type === "switchPage") {
             //     const iframe = document.getElementById("content-frame");
