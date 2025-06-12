@@ -234,6 +234,46 @@
                 // }, 3000);
             }
         });
+
+
+
+
+
+        window.addEventListener('message', (event) => {
+    // 只接受来自微信支付域名的消息
+    if (event.origin === 'https://payapp.weixin.qq.com') {
+      console.log('收到微信支付消息:', event.data);
+      
+      // 在这里处理支付结果
+      if (event.data.paymentStatus === 'success') {
+        alert('支付成功！订单号: ' + event.data.orderId);
+        // 这里可以添加更多成功处理逻辑
+      } else if (event.data.paymentStatus === 'failed') {
+        alert('支付失败: ' + event.data.errorMsg);
+      }
+    }
+  });
+
+  // 在iframe加载后发送初始化消息
+  const frame = document.getElementById('content-frame');
+  frame.onload = function() {
+    try {
+      // 获取iframe的实际源
+      const frameOrigin = new URL(frame.src).origin;
+      
+      // 向iframe发送初始化消息
+      frame.contentWindow.postMessage(
+        { type: 'init', source: window.location.origin },
+        frameOrigin
+      );
+    } catch (e) {
+      console.log('无法发送消息到iframe:', e.message);
+    }
+    
+    // 您现有的加载完成处理代码...
+    document.getElementById('loading').style.display = 'none';
+    syncCacheHeaders(frame);
+  };
     </script>
 
     <!-- 悬浮水印样式 -->
