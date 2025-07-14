@@ -81,9 +81,7 @@
         <div class="error-icon">✓</div>
         <h2 class="error-title">页面加载失败，请稍后再试</h2>
     </div>
-    <script src="key.js"></script>
     <script>
-        console.log(domain)
         // 获取目标URL
         const getTargetUrl = () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -148,7 +146,6 @@
                 xhr.responseType = "text";
                 
                 xhr.onload = function() {
-                    console.log('xhr', xhr)
                     if (xhr.status >= 200 && xhr.status < 300) {
                         resolve(xhr.response); // 成功时解析结果
                     } else {
@@ -174,7 +171,6 @@
                 b
             );
             location.href = targetUrl;
-            console.log("新URL:", targetUrl);
         };
         
         // 同步目标网址的缓存控制
@@ -219,7 +215,6 @@
 
 
         window.addEventListener("message", function(event) {
-            console.log('event', event);
             window.location.href = event.data.url;
             // if (event.data.type === "switchPage") {
             //     const iframe = document.getElementById("content-frame");
