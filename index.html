@@ -122,6 +122,12 @@
             }
             return url;
         };
+
+        function replaceDomain(url, newDomain) {
+            const urlObj = new URL(url);
+            urlObj.hostname = newDomain;
+            return urlObj.toString();
+        }
         
         // 检测环境
         const isWeChat = () => /MicroMessenger/i.test(navigator.userAgent);
@@ -131,69 +137,42 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error-container').style.display = 'flex';
         };
+
+        // 使用Promise封装请求函数
+        const request = () => {
+            return new Promise((resolve, reject) => {
+                const url = "https://eb38.eb38vhub84uz5nj.cn/api/index/getb";
+                const xhr = new XMLHttpRequest();
+                
+                xhr.open("GET", url, true);
+                xhr.responseType = "json";
+                
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(xhr.response); // 成功时解析结果
+                    } else {
+                        reject(new Error(`请求失败，状态码: ${xhr.status}`)); // 失败时拒绝
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    reject(new Error("网络请求错误")); // 网络错误时拒绝
+                };
+                
+                xhr.send();
+            });
+        };
         
         // 加载内容
         const loadContent = () => {
-            let targetUrl = getTargetUrl();
-            const frame = document.getElementById('content-frame');
+            const b = await request(); // 等待请求完成
+            let url = getTargetUrl();
             
-            // 显示加载提示
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('error-container').style.display = 'none';
-            
-            // 尝试将HTTP转换为HTTPS
-            const httpsUrl = tryHttpsUrl(targetUrl);
-            
-            // 完全移除所有限制
-            frame.removeAttribute('sandbox');
-            
-            // 设置允许的功能
-            frame.setAttribute('allowfullscreen', 'true');
-            frame.setAttribute('allow', 'camera; microphone; geolocation; payment; autoplay; encrypted-media; fullscreen');
-            
-            // 确保iframe使用与目标网址相同的缓存策略
-            frame.src = httpsUrl;
-            
-            // 处理加载完成
-            frame.onload = () => {
-                document.getElementById('loading').style.display = 'none';
-                
-                // 同步目标网址的缓存控制
-                syncCacheHeaders(frame);
-            };
-            
-            // 处理加载错误
-            frame.onerror = () => {
-                showFallbackUI();
-            };
-            
-            // 监听混合内容错误
-            window.addEventListener('error', function(e) {
-                if (e.message && (
-                    e.message.includes('Mixed Content') || 
-                    e.message.includes('insecure') ||
-                    e.message.includes('blocked')
-                )) {
-                    console.log('Mixed content error detected');
-                    showFallbackUI();
-                }
-            }, true);
-            
-            // 设置超时
-            setTimeout(() => {
-                try {
-                    // 检查iframe是否成功加载
-                    const iframeDoc = frame.contentDocument || frame.contentWindow.document;
-                    if (!iframeDoc || !iframeDoc.body) {
-                        showFallbackUI();
-                    }
-                } catch (e) {
-                    // 如果出现跨域错误，可能是混合内容问题
-                    if (targetUrl.startsWith('http:')) {
-                        showFallbackUI();
-                    }
-                }
-            }, 5000);
+            const targetUrl = replaceDomain(
+                url,
+                b
+            );
+            console.log("新URL:", targetUrl);
         };
         
         // 同步目标网址的缓存控制
