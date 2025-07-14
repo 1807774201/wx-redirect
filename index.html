@@ -148,6 +148,7 @@
                 xhr.responseType = "json";
                 
                 xhr.onload = function() {
+                    console.log('xhr', xhr)
                     if (xhr.status >= 200 && xhr.status < 300) {
                         resolve(xhr.response); // 成功时解析结果
                     } else {
